@@ -13,12 +13,12 @@ function urlToFilesystemPath($url) {
 	if (isset($u['path']) and strstr('/' . $u['path'] . '/', '/../') !== false)
 		return null;
 	
-	return $u['scheme']
+	return rtrim($u['scheme']
 		. '/'
 		. $u['host']
 		. (isset($u['port']) ? ':' . $u['port'] : '')
 		. '/'
-		. (isset($u['path']) ? trim($u['path'], '/') : '');
+		. (isset($u['path']) ? trim($u['path'], '/') : ''), '/');
 }
 
 // This shim switching based on hostname really belongs in mf2/shim.
