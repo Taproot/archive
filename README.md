@@ -31,12 +31,12 @@ if ($err !== null) {
 }
 
 // The data directory now looks something like this:
-// data/
-// 	http/
-// 		indiewebcamp.com/
-// 			Taproot/
-// 				YYYY-MM-DDTHHMMSS.html
-// 				YYYY-MM-DDTHHMMSS-headers.txt
+// 	data/
+// 		http/
+// 			indiewebcamp.com/
+// 				Taproot/
+// 					YYYY-MM-DDTHHMMSS.html
+// 					YYYY-MM-DDTHHMMSS-headers.txt
 
 ```
 
