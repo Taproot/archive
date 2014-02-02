@@ -1,0 +1,20 @@
+{
+	"name": "taproot/archive",
+	"description": "Your personal opinionated indieweb- and microformats-oriented HTML archiver.",
+	"license": "MIT",
+	"authors": [
+			{
+					"name": "Barnaby Walters",
+					"email": "barnaby@waterpigs.co.uk"
+			}
+	],
+	"require": {
+		"mf2/mf2": "~0.2.4",
+		"mf2/shim": "~0.2",
+		"icap/html-diff": "~1",
+		"guzzle/guzzle": "~3"
+	},
+	"autoload": {
+		"files": ["Archive.php"]
+	}
+}
