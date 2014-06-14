@@ -67,7 +67,7 @@ if ($err !== null) {
 	// Success! Either there was an archived copy, in which case the latest one was returned, or the URL was archived as if $archive->archive($url) had been called.
 }
 
-$versions = $archive->versions($url);
+$versions = $archive->archives($url);
 // $versions is an array of string archive IDs which match the form 'YYYY-MM-DDTHHMMSS'
 
 // getResponse allows you to get a particular archived version of a URL
@@ -79,7 +79,9 @@ Currently if you want to get a particular version of a URL you have to do the da
 
 ## Testing
 
-There is barely a test suite for this library yet, but it’s been in use every day on waterpigs.co.uk since 2014-01-01, so it’s stable enough.
+taproot/archive has a minimal PHPUnit test suite, which at the moment just tests some of the URL-to-filesystem path cases, and does a basic functional test of archiving a page.
+
+Contributions very welcome, whether they’re issues raised or pull requests! If you have a problem and you’re capable of writing a unit test demonstrating it please do, as it makes it so much easier to fix. Otherwise don’t worry, just raise an issue with as much useful information as you can :)
 
 ## Changelog
 
