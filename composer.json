@@ -9,7 +9,7 @@
 			}
 	],
 	"require": {
-		"mf2/mf2": "~0.2.4",
+		"mf2/mf2": "~0.2",
 		"mf2/shim": "~0.2",
 		"icap/html-diff": "~1",
 		"guzzle/guzzle": "~3"
