@@ -10,12 +10,11 @@
 	],
 	"require": {
 		"mf2/mf2": "*",
-		"mf2/shim": "*",
 		"icap/html-diff": "~1",
 		"guzzle/guzzle": "~3"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "~3.7"
+		"phpunit/phpunit": "~9"
 	},
 	"autoload": {
 		"files": ["Archive.php"]

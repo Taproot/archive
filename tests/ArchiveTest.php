@@ -2,10 +2,10 @@
 
 namespace Taproot;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ArchiveTest extends PHPUnit_Framework_TestCase {
-	public static function setUpBeforeClass() {
+class ArchiveTest extends TestCase {
+	public static function setUpBeforeClass(): void {
 		clearTestData();
 	}
 	

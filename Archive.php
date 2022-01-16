@@ -24,14 +24,7 @@ function urlToFilesystemPath($url) {
 // This shim switching based on hostname really belongs in mf2/shim.
 function mfForResponse(Guzzle\Http\Message\Response $resp) {
 	$html = $resp->getBody(true);
-	$host = parse_url($resp->getEffectiveUrl(), PHP_URL_HOST);
-	if ($host == 'twitter.com') {
-		return Mf2\Shim\parseTwitter($html, $resp->getEffectiveUrl());
-	} elseif ($host == 'facebook.com') {
-		return Mf2\Shim\parseFacebook($html, $resp->getEffectiveUrl());
-	} else {
-		return Mf2\parse($html, $resp->getEffectiveUrl());
-	}
+	return Mf2\parse($html, $resp->getEffectiveUrl());
 }
 
 function hasMicroformats($resp) {

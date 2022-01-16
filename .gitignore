@@ -2,3 +2,4 @@
 /vendor/
 composer.phar
 /tests/data-live/
+.phpunit*
