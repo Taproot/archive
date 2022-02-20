@@ -5,6 +5,7 @@ namespace Taproot;
 use DateTime;
 use GuzzleHttp;
 use Icap\HtmlDiff\HtmlDiff;
+use InvalidArgumentException;
 use Mf2;
 use Psr;
 
@@ -94,9 +95,9 @@ class Archive {
 		$p = $archivePath . DIRECTORY_SEPARATOR . $fetched->format('Y-m-d\THis');
 		file_put_contents($p . '.html', (string) $response->getBody());
 
-		$headers = '';
+		$headers = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()} {$response->getReasonPhrase()}\r\n";
 		foreach ($response->getHeaders() as $name => $values) {
-			$headers .= $name . ': ' . implode(', ', $values) . "\n";
+			$headers .= $name . ': ' . implode(', ', $values) . "\r\n";
 		}
 
 		file_put_contents($p . '-headers.txt', $headers);
@@ -133,7 +134,17 @@ class Archive {
 		$headers = file_get_contents($this->basepathForVersion($url, $version) . '-headers.txt');
 		$body = file_get_contents($this->basepathForVersion($url, $version) . '.html');
 		
-		$resp = GuzzleHttp\Psr7\Message::parseResponse($headers . $body);
+		try {
+			$resp = GuzzleHttp\Psr7\Message::parseResponse($headers . $body);
+		} catch (InvalidArgumentException $e) {
+			// Fix invalid headers caused by badly assembling the header strings in one version.
+			// Assume HTTP/1.1 200 OK
+			$headers = str_replace("\n", "\r\n", $headers);
+			$headers = "HTTP/1.1 200 OK\r\n{$headers}";
+			file_put_contents($this->basepathForVersion($url, $version) . '-headers.txt', $headers);
+			$resp = GuzzleHttp\Psr7\Message::parseResponse($headers . $body);
+		}
+		
 		return $resp;
 	}
 	
