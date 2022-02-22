@@ -95,12 +95,14 @@ class Archive {
 		$p = $archivePath . DIRECTORY_SEPARATOR . $fetched->format('Y-m-d\THis');
 		file_put_contents($p . '.html', (string) $response->getBody());
 
-		$headers = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()} {$response->getReasonPhrase()}\r\n";
+		//$headers = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()} {$response->getReasonPhrase()}\r\n";
+		$headers = "";
 		foreach ($response->getHeaders() as $name => $values) {
 			$headers .= $name . ': ' . implode(', ', $values) . "\r\n";
 		}
 
-		file_put_contents($p . '-headers.txt', $headers);
+		// Additional \r\n delimiter between last header and the body.
+		file_put_contents($p . '-headers.txt', $headers . "\r\n");
 		return [$response, null];
 	}
 	
@@ -138,11 +140,24 @@ class Archive {
 			$resp = GuzzleHttp\Psr7\Message::parseResponse($headers . $body);
 		} catch (InvalidArgumentException $e) {
 			// Fix invalid headers caused by badly assembling the header strings in one version.
-			// Assume HTTP/1.1 200 OK
-			$headers = str_replace("\n", "\r\n", $headers);
-			$headers = "HTTP/1.1 200 OK\r\n{$headers}";
-			file_put_contents($this->basepathForVersion($url, $version) . '-headers.txt', $headers);
+			// Correct any \r\n\n\n\n\n
+			$headers = preg_replace("/\r\n+/", "\r\n", $headers);
+
+			// Add \r to any lone \n
+			$headers = preg_replace("/(?<!\r)\n/", "\r\n", $headers);
+
+			// Collapse any repeated \r\n\ to a single \r\n, and restore the final \r\n\r\n delimiter
+			$headers = preg_replace("/(\r\n)+/", "\r\n", $headers) . "\r\n";
+
+			// Add potentially missing status line, assume HTTP/1.1 200 OK
+			if (!str_contains($headers, 'HTTP/')) {
+				$headers = "HTTP/1.1 200 OK\r\n" . $headers;
+			}
+
 			$resp = GuzzleHttp\Psr7\Message::parseResponse($headers . $body);
+			// Only save the new version of the headers if they parsed successfully, to avoid compounding issues.
+			file_put_contents($this->basepathForVersion($url, $version) . '-headers.txt', $headers);
+			return $resp;
 		}
 		
 		return $resp;
